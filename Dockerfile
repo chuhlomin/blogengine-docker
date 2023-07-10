@@ -1,6 +1,6 @@
 FROM alpine:3.18.2
 
-ARG ALPINE_PACKAGES="php82-iconv php82-pdo_mysql php82-pdo_pgsql php82-openssl php82-simplexml libfreetype6-dev libjpeg62-turbo-dev libpng-dev libonig-dev"
+ARG ALPINE_PACKAGES="php82-iconv php82-pdo_mysql php82-pdo_pgsql php82-openssl php82-simplexml libpng-dev"
 ARG RELEASE=4116
 ARG UID=65534
 ARG GID=82
