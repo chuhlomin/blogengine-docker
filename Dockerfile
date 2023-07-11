@@ -15,6 +15,7 @@ RUN \
     && apk upgrade --no-cache \
     && apk add --no-cache gnupg nginx curl unzip php82 php82-fpm php82-gd php82-opcache \
         s6 tzdata ${ALPINE_PACKAGES} \
+    && docker-php-ext-install mysqli \
 # Stabilize php config location
     && mv /etc/php82 /etc/php \
     && ln -s /etc/php /etc/php82 \
