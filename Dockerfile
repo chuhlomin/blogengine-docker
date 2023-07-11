@@ -1,4 +1,4 @@
-FROM 8.2.8-fpm-alpine3.18
+FROM php:8.2.8-fpm-alpine3.18
 
 ARG ALPINE_PACKAGES="php82-curl php82-iconv php82-pdo_mysql php82-pdo_pgsql php82-openssl php82-simplexml php82-mbstring libpng-dev"
 ARG RELEASE=4116
