@@ -33,7 +33,7 @@ RUN \
     && mkfifo \
         /etc/s6/services/nginx/supervise/control \
         /etc/s6/services/php-fpm82/supervise/control \
-    && chown -R ${UID}:${GID} /etc/s6 /run /var/lib/nginx /var/www \
+    && chown -R ${UID}:${GID} /run /var/lib/nginx /var/www \
     && chmod o+rwx /run /var/lib/nginx /var/lib/nginx/tmp \
 # Clean up
     && rm -rf /tmp/* \
@@ -41,7 +41,8 @@ RUN \
 
 COPY etc/ /etc/
 
-RUN chmod +x /etc/init.d/rc.local
+# Fix access rights
+RUN chown -R ${UID}:${GID} /etc/s6 /etc/init.d/rc.local
 
 WORKDIR /var/www
 # user nobody, group www-data
