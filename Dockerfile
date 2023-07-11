@@ -19,7 +19,6 @@ RUN \
 # Stabilize php config location
     && mv /etc/php82 /etc/php \
     && ln -s /etc/php /etc/php82 \
-    && ln -s $(which php82) /usr/local/bin/php \
 # Remove (some of the) default nginx & php config
     && rm -f /etc/nginx.conf /etc/nginx/http.d/default.conf /etc/php/php-fpm.d/www.conf \
     && rm -rf /etc/nginx/sites-* \
