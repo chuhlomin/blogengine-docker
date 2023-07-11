@@ -10,7 +10,7 @@ ENV PATH=$PATH:/srv/bin
 
 RUN \
 # Prepare composer dependencies
-    ALPINE_PACKAGES="$(echo ${ALPINE_PACKAGES} | sed 's/,/ /g')" ;\
+    ALPINE_PACKAGES="$(echo ${ALPINE_PACKAGES} | sed 's/,/ /g')" \
 # Install dependencies
     && apk upgrade --no-cache \
     && apk add --no-cache gnupg nginx curl unzip php82 php82-fpm php82-gd php82-opcache \
