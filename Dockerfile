@@ -42,7 +42,8 @@ RUN \
 COPY etc/ /etc/
 
 # Fix access rights
-RUN chown -R ${UID}:${GID} /etc/s6 /etc/init.d/rc.local
+RUN chown -R ${UID}:${GID} /etc/s6 /etc/init.d/rc.local \
+    && chmod +x /etc/init.d/rc.local /etc/s6/services/nginx/run /etc/s6/services/php-fpm82/run 
 
 WORKDIR /var/www
 # user nobody, group www-data
