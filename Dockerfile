@@ -1,6 +1,6 @@
 FROM alpine:3.18.2
 
-ARG ALPINE_PACKAGES="php82-iconv php82-pdo_mysql php82-pdo_pgsql php82-openssl php82-simplexml libpng-dev"
+ARG ALPINE_PACKAGES="php82-curl php82-iconv php82-pdo_mysql php82-pdo_pgsql php82-openssl php82-simplexml php82-mbstring libpng-dev"
 ARG RELEASE=4116
 ARG UID=65534
 ARG GID=82
@@ -11,20 +11,10 @@ ENV PATH=$PATH:/srv/bin
 RUN \
 # Prepare composer dependencies
     ALPINE_PACKAGES="$(echo ${ALPINE_PACKAGES} | sed 's/,/ /g')" ;\
-    ALPINE_COMPOSER_PACKAGES="" ;\
-    if [ -n "${COMPOSER_PACKAGES}" ] ; then \
-        ALPINE_COMPOSER_PACKAGES="php82-phar" ;\
-        if [ -n "${ALPINE_PACKAGES##*php82-curl*}" ] ; then \
-            ALPINE_COMPOSER_PACKAGES="php82-curl ${ALPINE_COMPOSER_PACKAGES}" ;\
-        fi ;\
-        if [ -n "${ALPINE_PACKAGES##*php82-mbstring*}" ] ; then \
-            ALPINE_COMPOSER_PACKAGES="php82-mbstring ${ALPINE_COMPOSER_PACKAGES}" ;\
-        fi ;\
-    fi \
 # Install dependencies
     && apk upgrade --no-cache \
     && apk add --no-cache gnupg nginx curl unzip php82 php82-fpm php82-gd php82-opcache \
-        s6 tzdata ${ALPINE_PACKAGES} ${ALPINE_COMPOSER_PACKAGES} \
+        s6 tzdata ${ALPINE_PACKAGES} \
 # Stabilize php config location
     && mv /etc/php82 /etc/php \
     && ln -s /etc/php /etc/php82 \
@@ -36,7 +26,7 @@ RUN \
     && ln -s /dev/stderr /var/log/nginx/error.log \
 # Download and unzip Aegea
     && curl https://blogengine.ru/download/e2_distr_v${RELEASE}.zip -o a.zip \
-    && unzip -d /var/www/ a.zip \
+    && unzip -q -d /var/www/ a.zip \
     && rm a.zip \
 # Support running s6 under a non-root user
     && mkdir -p /etc/s6/services/nginx/supervise /etc/s6/services/php-fpm82/supervise \
@@ -47,9 +37,11 @@ RUN \
     && chmod o+rwx /run /var/lib/nginx /var/lib/nginx/tmp \
 # Clean up
     && rm -rf /tmp/* \
-    && apk del --no-cache gnupg curl unzip ${ALPINE_COMPOSER_PACKAGES}
+    && apk del --no-cache gnupg unzip
 
 COPY etc/ /etc/
+
+RUN chmod +x /etc/init.d/rc.local
 
 WORKDIR /var/www
 # user nobody, group www-data
